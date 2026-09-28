@@ -192,9 +192,12 @@ const settingService = {
 
 		const settingRow = await this.get(c, true);
 		const token = await userContext.getToken(c);
+		const adminRegistered = c.env.admin && await c.env.db.prepare(
+			'SELECT 1 FROM user WHERE email = ? COLLATE NOCASE LIMIT 1'
+		).bind(c.env.admin).first();
 
 		return {
-			register: settingRow.register,
+			register: adminRegistered ? 1 : settingRow.register,
 			title: settingRow.title,
 			manyEmail: settingRow.manyEmail,
 			addEmail: settingRow.addEmail,

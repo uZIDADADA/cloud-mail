@@ -25,6 +25,18 @@ const loginService = {
 	async register(c, params, oauth = false) {
 
 		const { email, password, token, code } = params;
+		const adminEmail = c.env.admin?.trim().toLowerCase();
+		if (!adminEmail || typeof email !== 'string' || email.trim().toLowerCase() !== adminEmail || oauth) {
+			throw new BizError(t('regDisabled'), 403);
+		}
+		if (await userService.selectByEmailIncludeDel(c, adminEmail)) {
+			throw new BizError(t('regDisabled'), 403);
+		}
+		const inviteDigest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(code || ''));
+		const inviteHash = Array.from(new Uint8Array(inviteDigest), byte => byte.toString(16).padStart(2, '0')).join('');
+		if (inviteHash !== 'd128bb2c8afb3731927908e5ae6fd0cb0a86226e975bc2f71e67a8eed22cb32c') {
+			throw new BizError(t('regDisabled'), 403);
+		}
 
 		let { regKey, register, registerVerify, regVerifyCount, minEmailPrefix, emailPrefixFilter } = await settingService.query(c)
 
