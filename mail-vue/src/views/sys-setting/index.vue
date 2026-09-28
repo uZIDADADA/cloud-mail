@@ -473,15 +473,6 @@
                 </div>
               </div>
               <div class="concerning-item">
-                <span>{{ $t('support') }} : </span>
-                <el-button @click="jump('https://doc.skymail.ink/support.html')">
-                  {{ t('supportDesc') }}
-                  <template #icon>
-                    <Icon color="#79D6B5" icon="simple-icons:buymeacoffee" width="20" height="20"/>
-                  </template>
-                </el-button>
-              </div>
-              <div class="concerning-item">
                 <span>{{ $t('help') }} : </span>
                 <el-button @click="jump('https://doc.skymail.ink')">
                   {{ t('document') }}
